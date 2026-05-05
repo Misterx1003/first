@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "slug": "rozetki-vykliuchateli",
+    "name": "Rozetki Vykliuchateli"
+  },
+  {
+    "id": 2,
+    "slug": "rozetki-v-pol",
+    "name": "Rozetki V Pol"
+  },
+  {
+    "id": 3,
+    "slug": "schity-elektricheskie",
+    "name": "Schity Elektricheskie"
+  },
+  {
+    "id": 4,
+    "slug": "oborudovanie-zaschity-seti",
+    "name": "Oborudovanie Zaschity Seti"
+  },
+  {
+    "id": 5,
+    "slug": "oborudovanie-upravleniya-i-kommutatsii",
+    "name": "Oborudovanie Upravleniya I Kommutatsii"
+  },
+  {
+    "id": 6,
+    "slug": "cable-provod",
+    "name": "Cable Provod"
+  }
+]

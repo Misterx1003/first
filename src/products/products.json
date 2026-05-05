@@ -1,0 +1,155 @@
+[
+  {
+    "id": 1,
+    "name": "Вимикач одноклавішний, білий, EPH0170121 Schneider Asfora",
+    "price": 107.31,
+    "desc": "Простий  вимикач одноклавішний  призначений для керування освітленням (вмикання та вимикання) з одного місця. Це найпростіший комутаційний механізм будь-якої серії вимикачів.",
+    "img": "https://cdn.optipic.io/site-1236/pictures/product/middle/147746_middle.jpg",
+    "category": "rozetki-vykliuchateli",
+    "link": "https://shop220.com.ua/products/vykljuchatel-odnoklavishnyj-belyj-eph0170121-schneider-asfora"
+  },
+  {
+    "id": 2,
+    "name": "Коробка для монтажу розеток в колони, G2850 Hager",
+    "price": 133.28,
+    "desc": "Одинарна установка G2850 призначена для встановлення стандартних розеток формату 60мм в електроустановлювальні колони. Можливе вертикальне та горизонтальне встановлення механізмів.",
+    "img": "https://shop220.com.ua/pictures/product/middle/30879_middle.jpg",
+    "category": "rozetki-v-pol",
+    "link": "https://shop220.com.ua/categories/rozetki-v-pol?prop=8078"
+  },
+  {
+    "id": 3,
+    "name": "Електричний щит на 8 модулів, врізний, димчасті двері, Easy9 EU Schneider Electric EZ9EUA108",
+    "price": 562.52,
+    "desc": "Easy9 EU – це щит для вбудованого монтажу, призначений для модульного обладнання, переважно у житловому будівництві. Містить 1 ряд із 8 стандартними модулями 18 мм. Він може вмістити будь-яке модульне обладнання.",
+    "img": "https://shop220.com.ua/pictures/product/big/108507_big.png",
+    "category": "schity-elektricheskie",
+    "link": "https://shop220.com.ua/categories/schity-elektricheskie"
+  },
+  {
+    "id": 4,
+    "name": "Автомат 6 А, 1 полюс тип С, EZ9F34106 Schneider Easy9",
+    "price": 189.63,
+    "desc": "Модульний автомат на струм 6А виробництва концерну Schneider Electric серії Easy9 призначений для захисту споживачів електричної енергії від перевантажень і ліній живлення від понад високих струмів, що виникають при коротких замиканнях (КЗ).",
+    "img": "https://shop220.com.ua/pictures/product/big/34663_big.png",
+    "category": "oborudovanie-zaschity-seti",
+    "link": "https://shop220.com.ua/categories/oborudovanie-zaschity-seti"
+  },
+  {
+    "id": 5,
+    "name": "Рубильник на генератор I-0-II трипозиційний 40 А, 1 полюс, SPMP-1P40",
+    "price": 325,
+    "desc": "Трьохпозиційний перемикач I-0-II призначений для ручного перемикання електропостачання будинку на однофазний дизель-генератор.",
+    "img": "https://shop220.com.ua/pictures/product/big/95617_big.png",
+    "category": "oborudovanie-upravleniya-i-kommutatsii",
+    "link": "https://shop220.com.ua/categories/oborudovanie-upravleniya-i-kommutatsii"
+  },
+  {
+    "id": 6,
+    "name": "Кабель ВВГ НД 2х1,5 плоский, що не розповсюджує горіння, ЗЗЦМ",
+    "price": 23.35,
+    "desc": "Електричний силовий кабель  ВВГнгд 3х1,5  призначений для передачі на відстані та розподілу за місцем електроенергії стаціонарним споживачам.",
+    "img": "https://shop220.com.ua/pictures/product/big/50180_big.jpg",
+    "category": "cable-provod",
+    "link": "https://shop220.com.ua/categories/cable-provod"
+  },
+  {
+    "id": 6,
+    "name": "Гофра 16 мм з протяжкою, бухта 100м, 91916 ДКС",
+    "price": 10.92,
+    "desc": "Гнучка гофрована труба або просто гофра застосовується для монтажу прихованої проводки. Гофра 16 мм ДКС підходить для протягування кабелів або проводів зовнішнім діаметром до 10мм.",
+    "img": "https://shop220.com.ua/pictures/product/big/97581_big.jpg",
+    "category": "gofra-gofrotruba",
+    "link": "https://shop220.com.ua/categories/gofra-gofrotruba"
+  },
+  {
+    "id": 7,
+    "name": "Реле автоматичного введення резерву, 8А, e.control.v12 Enext",
+    "price": 1776.24,
+    "desc": "Реле автоматичного введення резерву e.control.v12 (далі як реле) призначене для побудови схем автоматичного введення резервного живлення (АВР) на об'єктах з двома введеннями живлення та однією лінією, що відходить до навантаження.",
+    "img": "https://shop220.com.ua/pictures/product/middle/103171_middle.jpg",
+    "category": "perekliuchateli-rubilniki",
+    "link": "https://shop220.com.ua/categories/perekliuchateli-rubilniki?prop=5764"
+  },
+  {
+    "id": 8,
+    "name": "Вимикач навантаження 40 А, трифазний, KS3.40",
+    "price": 1560.52,
+    "desc": "Вимикач навантаження І-О виробництва Ensto використовується для комутації струмів до 40 А в 3-х полюсних мережах. Установка складає дин-рейку чи монтажну панель.",
+    "img": "https://shop220.com.ua/pictures/product/big/93231_big.jpg",
+    "category": "perekliuchateli-rubilniki",
+    "link": "https://shop220.com.ua/categories/perekliuchateli-rubilniki?prop=8320"
+  },
+  {
+    "id": 9,
+    "name": "Перемикач введення резерву 40А, 4 полюси, iSSW Acti9 Schneider Electric",
+    "price": 1799.28,
+    "desc": "Acti9 iSSW – трипозиційний перемикач (I-0-II), 4 полюсні з номінальним струмом 40A, робоча частота 50/60 Гц.",
+    "img": "https://shop220.com.ua/pictures/product/big/126768_big.JPG",
+    "category": "perekliuchateli-rubilniki",
+    "link": "https://shop220.com.ua/categories/perekliuchateli-rubilniki?prop=3177"
+  },
+  {
+    "id": 10,
+    "name": "Автоматичний вимикач MCCB HGM 3P 80А Icu-16kA (0.8 – 1.0) x In",
+    "price": 2852.18,
+    "desc": "Розроблений для захисту обладнання в мережах із змінним струмом, вимикач Автоматичний вимикач MCCB HGM 3P 80А Icu-16kA (0.8 – 1.0) x In витримує до 16 кА. Пристрій з 3 полюси (3 фази), підтримує струм до 80 А і реагує по кривій.",
+    "img": "https://shop220.com.ua/pictures/product/big/151330_big.jpg",
+    "category": "avtomaticheskie-vykljuchateli",
+    "link": "https://shop220.com.ua/categories/avtomaticheskie-vykljuchateli-hyundai"
+  },
+  {
+    "id": 11,
+    "name": "Автоматичний вимикач 6А, 1-полюсний, уставка С, Siemens",
+    "price": 436.28,
+    "desc": "Модульний автоматичний вимикач з номінальним струмом 6А виробництва Siemens призначений для захисту електричних мереж змінного струму частотою 50 Гц і напругою до 400 від перевантаження і струмів короткого замикання.",
+    "img": "https://shop220.com.ua/pictures/product/big/106426_big.jpg",
+    "category": "avtomaticheskie-vykliuchateli",
+    "link": "https://shop220.com.ua/categories/avtomaticheskie-vykliuchateli-proizvoditel-siemens"
+  },
+  {
+    "id": 12,
+    "name": "Модульний автомат 6А, 1 полюс, тип, NB1-63 DB Chint",
+    "price": 194.17,
+    "desc": "Модульний автоматичний вимикач з номінальним струмом 6А серії NB1-63 DB від Chint призначений для захисту електричних мереж змінного струму частотою 50 Гц і напругою до 400 від перевантаження і струмів короткого замикання.",
+    "img": "https://shop220.com.ua/pictures/product/big/107231_big.jpg",
+    "category": "avtomaticheskie-vykliuchateli",
+    "link": "https://shop220.com.ua/categories/avtomaticheskie-vykliuchateli-proizvoditel-chint"
+  },
+  {
+    "id": 13,
+    "name": "Автоматичний вимикач 6А, 1-полюсний, уставка С, Siemens",
+    "price": 436.28,
+    "desc": "Модульний автоматичний вимикач з номінальним струмом 6А виробництва Siemens призначений для захисту електричних мереж змінного струму частотою 50 Гц і напругою до 400 від перевантаження і струмів короткого замикання.",
+    "img": "https://shop220.com.ua/pictures/product/big/106426_big.jpg",
+    "category": "avtomaticheskie-vykliuchateli",
+    "link": "https://shop220.com.ua/categories/avtomaticheskie-vykliuchateli-proizvoditel-siemens"
+  },
+  {
+    "id": 14,
+    "name": "Автоматичний вимикач 6А, 1 полюс, уставка C, ABB BMS411C06",
+    "price": 243.74,
+    "desc": "Автоматичний вимикач ABB BMS411C06 серії basic M призначений для захисту від перевантаження та струмів короткого замикання в мережах 220/380 В.",
+    "img": "https://shop220.com.ua/pictures/product/big/42720_big.jpg",
+    "category": "avtomaticheskie-vykliuchateli",
+    "link": "https://shop220.com.ua/categories/avtomaticheskie-vykliuchateli-abb"
+  },
+  {
+    "id": 15,
+    "name": "Автоматичний вимикач 50А 3р, ВА-2003 АСКО УКРЕМ",
+    "price": 921.66,
+    "desc": "Призначений для оперативних комутацій та захисту низьковольтних електричних ланцюгів від тривалих струмових перевантажень та струмів короткого замикання.",
+    "img": "https://shop220.com.ua/pictures/product/big/134073_big.jpeg",
+    "category": "avtomaticheskie-vykliuchateli",
+    "link": "https://shop220.com.ua/categories/avtomaticheskie-vykliuchateli-proizvoditel-asko-ukrem"
+  },
+  {
+    "id": 16,
+    "name": "Автоматичний вимикач 63А 3р, ВА-2003 АСКО УКРЕМ",
+    "price": 921.66,
+    "desc": "Призначений для оперативних комутацій та захисту низьковольтних електричних ланцюгів від тривалих струмових перевантажень та струмів короткого замикання.",
+    "img": "https://shop220.com.ua/pictures/product/big/134081_big.jpeg",
+    "category": "avtomaticheskie-vykliuchateli",
+    "link": "https://shop220.com.ua/categories/avtomaticheskie-vykliuchateli-proizvoditel-asko-ukrem"
+  }
+]

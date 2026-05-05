@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Це примусово виводить шапку на самий верх */
+header {
+    z-index: 10000 !important;
+    pointer-events: auto !important; /* Гарантуємо, що вся шапка клікабельна */
+}
+
+/* Це примусово дозволяє кліки на всі посилання та кнопки, ігноруючи блокування батьківських елементів */
+a, button, [role="button"] {
+    pointer-events: auto !important;
+    z-index: 10001 !important; 
+}
+/* -------------------------------------------------- */
+html {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}

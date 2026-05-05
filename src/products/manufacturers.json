@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "name": "Schneider Electric",
+    "slug": "schneider-electric"
+  },
+  {
+    "id": 2,
+    "name": "Hager",
+    "slug": "hager"
+  },
+  {
+    "id": 3,
+    "name": "Unknown",
+    "slug": "unknown"
+  }
+]
