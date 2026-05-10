@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import ReviewStars from "./ReviewStars";
 
 const ProductCard = ({ product, onAdd, showAddButton = false }) => {
-  const [avgRating, setAvgRating] = useState(0);
-  const [reviewCount, setReviewCount] = useState(0);
+  const [avgRating] = useState(0);
+  const [reviewCount] = useState(0);
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition flex flex-col">
