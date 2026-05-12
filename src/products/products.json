@@ -151,5 +151,23 @@
     "img": "https://shop220.com.ua/pictures/product/big/134081_big.jpeg",
     "category": "avtomaticheskie-vykliuchateli",
     "link": "https://shop220.com.ua/categories/avtomaticheskie-vykliuchateli-proizvoditel-asko-ukrem"
+  },
+  {
+    "id": 17,
+    "name": "Розетка IP66 вологозахищена, накладна, DIS1376407 DKC",
+    "price": 1260,
+    "desc": "Електрична розетка зі ступенем захисту від пилу та вологи IP66 використовується для встановлення зовні приміщень. Моноблочне виконання вологостійкої розетки DIS1376407 DKC призначене для накладного монтажу.",
+    "img": "https://shop220.com.ua/pictures/product/big/49072_big.jpg",
+    "category": "rozetki-vykliuchateli",
+    "link": "https://shop220.com.ua/categories/rozetki-vykliuchateli?prop=5877"
+  },
+  {
+    "id": 18,
+    "name": "Коробка для механізмів IP66, одинарна, DIS137121 DKC",
+    "price": 254.16,
+    "desc": "Основні сфери застосування: Промислове виробництво та будівництво; Сільське господарство; Громадське харчування та роздрібна торгівля; Приватне будівництво; Розважальні комплекси; Автомийки.",
+    "img": "https://shop220.com.ua/pictures/product/big/134081_big.jpeg",
+    "category": "rozetki-vykliuchateli",
+    "link": "https://shop220.com.ua/categories/rozetki-vykliuchateli?prop=5877"
   }
 ]
