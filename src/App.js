@@ -1,18 +1,7 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
-
-// Компоненти
-import Navbar from "./components/Navbar";
-
-// Сторінки
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Orders from "./pages/Orders";
-import Store from "./pages/Store";
-import Cart from "./pages/Cart";
-import NotFound from "./pages/NotFound";
+import Order from "./pages/Order";
+import License from "./pages/License";
+import History from "./pages/History";
+import Favorites from "./pages/Favorites";
 
 // Каталог і товар
 import Catalog from "./components/Catalog";
@@ -36,65 +25,175 @@ import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   return (
     <AuthProvider>
-        <CartProvider>
-          <CompareProvider>
-            <Router>
+      <CartProvider>
+        <CompareProvider>
+          <Router>
 
-              <Navbar />
-              <Toaster position="top-right" />
+            {/* Навігація */}
+            <Navbar />
 
-              <Routes>
+            {/* Toast-повідомлення */}
+            <Toaster position="top-right" />
 
-                {/* Головні сторінки */}
-                <Route path="/" element={<Home />} />
-                <Route path="/магазин" element={<Store />} />
+            <Routes>
 
-                {/* Каталог товарів */}
-                <Route path="/catalog" element={<Catalog />} />
-                <Route path="/каталог" element={<Catalog />} />
+              {/* =========================
+                  ГОЛОВНІ СТОРІНКИ
+              ========================= */}
 
-                {/* Сторінка окремого товару */}
-                <Route path="/product/:id" element={<ProductPage />} />
+              <Route path="/" element={<Home />} />
 
-                {/* Кошик */}
-                <Route path="/cart" element={<Cart />} />
+              <Route path="/магазин" element={<Store />} />
 
-                {/* Користувач */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
 
+              {/* =========================
+                  КАТАЛОГ
+              ========================= */}
+
+              <Route path="/catalog" element={<Catalog />} />
+
+              <Route path="/каталог" element={<Catalog />} />
+
+
+              {/* =========================
+                  ОКРЕМИЙ ТОВАР
+              ========================= */}
+
+              <Route
+                path="/product/:id"
+                element={<ProductPage />}
+              />
+
+
+              {/* =========================
+                  КОШИК
+              ========================= */}
+
+              <Route
+                path="/cart"
+                element={<Cart />}
+              />
+
+
+              {/* =========================
+                  ОФОРМЛЕННЯ ЗАМОВЛЕННЯ
+              ========================= */}
+
+              <Route
+                path="/order"
+                element={<Order />}
+              />
+
+
+              {/* =========================
+                  УЛЮБЛЕНІ ТОВАРИ
+              ========================= */}
+
+              <Route
+                path="/favorites"
+                element={<Favorites />}
+              />
+
+
+              {/* =========================
+                  ІНФОРМАЦІЯ ПРО КОМПАНІЮ
+              ========================= */}
+
+              <Route
+                path="/history"
+                element={<History />}
+              />
+
+              <Route
+                path="/licenses"
+                element={<License />}
+              />
+
+
+              {/* =========================
+                  АВТОРИЗАЦІЯ
+              ========================= */}
+
+              <Route
+                path="/login"
+                element={<Login />}
+              />
+
+              <Route
+                path="/register"
+                element={<Register />}
+              />
+
+
+              {/* =========================
+                  МОЇ ЗАМОВЛЕННЯ
+                  Тільки для авторизованого
+                  користувача
+              ========================= */}
+
+              <Route
+                path="/orders"
+                element={
+                  <ProtectedRoute>
+                    <Orders />
+                  </ProtectedRoute>
+                }
+              />
+
+
+              {/* =========================
+                  АДМІН-ПАНЕЛЬ
+              ========================= */}
+
+              <Route
+                path="/admin/login"
+                element={<AdminLogin />}
+              />
+
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute adminOnly>
+                    <AdminPanel />
+                  </ProtectedRoute>
+                }
+              >
+
+                {/* Користувачі */}
                 <Route
-                  path="/orders"
-                  element={
-                    <ProtectedRoute>
-                      <Orders />
-                    </ProtectedRoute>
-                  }
+                  path="users"
+                  element={<AdminUsers />}
                 />
 
-                {/* Адмін кабінет */}
-                <Route path="/admin/login" element={<AdminLogin />} />
-
+                {/* Товари */}
                 <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <AdminPanel />
-                    </ProtectedRoute>
-                  }
-                >
-                  <Route path="users" element={<AdminUsers />} />
-                  <Route path="products" element={<AdminProducts />} />
-                  <Route path="orders" element={<AdminOrders />} />
-                </Route>
+                  path="products"
+                  element={<AdminProducts />}
+                />
 
-                {/* 404 */}
-                <Route path="*" element={<NotFound />} />
+                {/* Замовлення */}
+                <Route
+                  path="orders"
+                  element={<AdminOrders />}
+                />
 
-              </Routes>
-            </Router>
-          </CompareProvider>
-        </CartProvider>
+              </Route>
+
+
+              {/* =========================
+                  404
+              ========================= */}
+
+              <Route
+                path="*"
+                element={<NotFound />}
+              />
+
+            </Routes>
+
+          </Router>
+        </CompareProvider>
+      </CartProvider>
     </AuthProvider>
   );
 }
