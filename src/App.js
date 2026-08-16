@@ -1,26 +1,56 @@
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+
+import { Toaster } from "react-hot-toast";
+
+// =========================
+// Компоненти
+// =========================
+
+import Navbar from "./components/Navbar";
+import Catalog from "./components/Catalog";
+import ProductPage from "./components/ProductPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+// =========================
+// Сторінки
+// =========================
+
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Orders from "./pages/Orders";
+import Store from "./pages/Store";
+import Cart from "./pages/Cart";
+import NotFound from "./pages/NotFound";
+
+// Нові сторінки
 import Order from "./pages/Order";
 import License from "./pages/License";
 import History from "./pages/History";
 import Favorites from "./pages/Favorites";
 
-// Каталог і товар
-import Catalog from "./components/Catalog";
-import ProductPage from "./components/ProductPage";
-
+// =========================
 // Адмін
+// =========================
+
 import AdminPanel from "./admin/AdminPanel";
 import AdminLogin from "./admin/AdminLogin";
 import AdminProducts from "./admin/AdminProducts";
 import AdminUsers from "./admin/AdminUsers";
 import AdminOrders from "./admin/AdminOrders";
 
+// =========================
 // Контексти
+// =========================
+
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { CompareProvider } from "./context/CompareContext";
-
-// Protected Route
-import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -28,32 +58,43 @@ function App() {
       <CartProvider>
         <CompareProvider>
           <Router>
-
-            {/* Навігація */}
             <Navbar />
 
-            {/* Toast-повідомлення */}
             <Toaster position="top-right" />
 
             <Routes>
 
               {/* =========================
-                  ГОЛОВНІ СТОРІНКИ
+                  ГОЛОВНА
               ========================= */}
 
-              <Route path="/" element={<Home />} />
+              <Route
+                path="/"
+                element={<Home />}
+              />
 
-              <Route path="/магазин" element={<Store />} />
+              {/* =========================
+                  МАГАЗИН
+              ========================= */}
 
+              <Route
+                path="/магазин"
+                element={<Store />}
+              />
 
               {/* =========================
                   КАТАЛОГ
               ========================= */}
 
-              <Route path="/catalog" element={<Catalog />} />
+              <Route
+                path="/catalog"
+                element={<Catalog />}
+              />
 
-              <Route path="/каталог" element={<Catalog />} />
-
+              <Route
+                path="/каталог"
+                element={<Catalog />}
+              />
 
               {/* =========================
                   ОКРЕМИЙ ТОВАР
@@ -64,7 +105,6 @@ function App() {
                 element={<ProductPage />}
               />
 
-
               {/* =========================
                   КОШИК
               ========================= */}
@@ -73,7 +113,6 @@ function App() {
                 path="/cart"
                 element={<Cart />}
               />
-
 
               {/* =========================
                   ОФОРМЛЕННЯ ЗАМОВЛЕННЯ
@@ -84,9 +123,8 @@ function App() {
                 element={<Order />}
               />
 
-
               {/* =========================
-                  УЛЮБЛЕНІ ТОВАРИ
+                  УЛЮБЛЕНІ
               ========================= */}
 
               <Route
@@ -94,9 +132,8 @@ function App() {
                 element={<Favorites />}
               />
 
-
               {/* =========================
-                  ІНФОРМАЦІЯ ПРО КОМПАНІЮ
+                  ІСТОРІЯ РОБІТ
               ========================= */}
 
               <Route
@@ -104,11 +141,14 @@ function App() {
                 element={<History />}
               />
 
+              {/* =========================
+                  ЛІЦЕНЗІЇ
+              ========================= */}
+
               <Route
                 path="/licenses"
                 element={<License />}
               />
-
 
               {/* =========================
                   АВТОРИЗАЦІЯ
@@ -124,11 +164,8 @@ function App() {
                 element={<Register />}
               />
 
-
               {/* =========================
                   МОЇ ЗАМОВЛЕННЯ
-                  Тільки для авторизованого
-                  користувача
               ========================= */}
 
               <Route
@@ -140,15 +177,18 @@ function App() {
                 }
               />
 
-
               {/* =========================
-                  АДМІН-ПАНЕЛЬ
+                  АДМІН — ВХІД
               ========================= */}
 
               <Route
                 path="/admin/login"
                 element={<AdminLogin />}
               />
+
+              {/* =========================
+                  АДМІН — ПАНЕЛЬ
+              ========================= */}
 
               <Route
                 path="/admin"
@@ -159,26 +199,22 @@ function App() {
                 }
               >
 
-                {/* Користувачі */}
                 <Route
                   path="users"
                   element={<AdminUsers />}
                 />
 
-                {/* Товари */}
                 <Route
                   path="products"
                   element={<AdminProducts />}
                 />
 
-                {/* Замовлення */}
                 <Route
                   path="orders"
                   element={<AdminOrders />}
                 />
 
               </Route>
-
 
               {/* =========================
                   404
@@ -190,7 +226,6 @@ function App() {
               />
 
             </Routes>
-
           </Router>
         </CompareProvider>
       </CartProvider>
