@@ -17,18 +17,24 @@ import ProductPage from "./components/ProductPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // =========================
-// Сторінки
+// Основні сторінки
 // =========================
 
 import Home from "./pages/Home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Orders from "./pages/Orders";
 import Store from "./pages/Store";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
 
-// Нові сторінки
+// =========================
+// Додаткові сторінки
+// =========================
+
 import Order from "./pages/Order";
 import License from "./pages/License";
 import History from "./pages/History";
@@ -58,8 +64,11 @@ function App() {
       <CartProvider>
         <CompareProvider>
           <Router>
+
+            {/* Навігація */}
             <Navbar />
 
+            {/* Toast-повідомлення */}
             <Toaster position="top-right" />
 
             <Routes>
@@ -71,6 +80,24 @@ function App() {
               <Route
                 path="/"
                 element={<Home />}
+              />
+
+              {/* =========================
+                  ПРО НАС
+              ========================= */}
+
+              <Route
+                path="/about"
+                element={<About />}
+              />
+
+              {/* =========================
+                  КОНТАКТИ
+              ========================= */}
+
+              <Route
+                path="/contact"
+                element={<Contact />}
               />
 
               {/* =========================
@@ -119,6 +146,19 @@ function App() {
               ========================= */}
 
               <Route
+                path="/checkout"
+                element={
+                  <ProtectedRoute>
+                    <Checkout />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* =========================
+                  ЗАМОВИТИ РОБОТУ
+              ========================= */}
+
+              <Route
                 path="/order"
                 element={<Order />}
               />
@@ -146,18 +186,27 @@ function App() {
               ========================= */}
 
               <Route
+                path="/license"
+                element={<License />}
+              />
+
+              <Route
                 path="/licenses"
                 element={<License />}
               />
 
               {/* =========================
-                  АВТОРИЗАЦІЯ
+                  ВХІД
               ========================= */}
 
               <Route
                 path="/login"
                 element={<Login />}
               />
+
+              {/* =========================
+                  РЕЄСТРАЦІЯ
+              ========================= */}
 
               <Route
                 path="/register"
@@ -198,7 +247,6 @@ function App() {
                   </ProtectedRoute>
                 }
               >
-
                 <Route
                   path="users"
                   element={<AdminUsers />}
@@ -213,7 +261,6 @@ function App() {
                   path="orders"
                   element={<AdminOrders />}
                 />
-
               </Route>
 
               {/* =========================
@@ -226,6 +273,7 @@ function App() {
               />
 
             </Routes>
+
           </Router>
         </CompareProvider>
       </CartProvider>
