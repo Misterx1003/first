@@ -6,16 +6,26 @@ const jwt = require("jsonwebtoken");
 const authRoutes = require("./routes/auth");
 
 const app = express();
+
+// ======================================
+// ⚙ НАЛАШТУВАННЯ
+// ======================================
+
 app.use(cors());
 app.use(express.json());
 
 // ======================================
-// 🔗 ПІДКЛЮЧЕННЯ ДО MongoDB
+// 🔗 ПІДКЛЮЧЕННЯ ДО MongoDB ATLAS
 // ======================================
+
 mongoose
-  .connect("mongodb://127.0.0.1:27017/shop")
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log("MongoDB error:", err));
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log("MongoDB Atlas connected ✅");
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error ❌:", err);
+  });
 
 // ======================================
 // 📦 ROUTES
@@ -30,72 +40,137 @@ app.use("/admin/users", require("./routes/adminUsers"));
 // Замовлення
 app.use("/api/orders", require("./routes/orders"));
 
-// ⭐⭐⭐ ВІДГУКИ
+// Відгуки
 app.use("/api/reviews", require("./routes/reviews"));
 
-
+// Авторизація користувачів
 app.use("/api/auth", authRoutes);
 
 // ======================================
 // 🔐 АВТОРИЗАЦІЯ АДМІНА
 // ======================================
 
-// Тимчасовий адмін акаунт
 const ADMIN = {
-  username: "admin",
-  password: "2468013579", // змінити пізніше
+  username: process.env.ADMIN_USERNAME,
+  password: process.env.ADMIN_PASSWORD,
 };
 
-// Логін адміна
+// ======================================
+// 🔑 ЛОГІН АДМІНА
+// ======================================
+
 app.post("/admin/login", (req, res) => {
   const { username, password } = req.body;
 
-  if (username !== ADMIN.username || password !== ADMIN.password) {
-    return res.status(401).json({ message: "Невірний логін або пароль" });
+  if (
+    username !== ADMIN.username ||
+    password !== ADMIN.password
+  ) {
+    return res.status(401).json({
+      message: "Невірний логін або пароль",
+    });
   }
 
   const token = jwt.sign(
-    { role: "admin", username },
+    {
+      role: "admin",
+      username,
+    },
     process.env.JWT_SECRET,
-    { expiresIn: "7d" }
+    {
+      expiresIn: "7d",
+    }
   );
 
   res.json({ token });
 });
 
-// Middleware: перевірка токена адміна
+// ======================================
+// 🛡️ MIDDLEWARE АДМІНА
+// ======================================
+
 function verifyAdmin(req, res, next) {
   const authHeader = req.headers.authorization;
+
   if (!authHeader) {
-    return res.status(401).json({ message: "Токен не надано" });
+    return res.status(401).json({
+      message: "Токен не надано",
+    });
   }
 
   const token = authHeader.split(" ")[1];
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, admin) => {
-    if (err) return res.status(403).json({ message: "Невірний токен" });
-    if (admin.role !== "admin")
-      return res.status(403).json({ message: "Доступ заборонено" });
+  jwt.verify(
+    token,
+    process.env.JWT_SECRET,
+    (err, admin) => {
+      if (err) {
+        return res.status(403).json({
+          message: "Невірний токен",
+        });
+      }
 
-    req.admin = admin;
-    next();
-  });
+      if (admin.role !== "admin") {
+        return res.status(403).json({
+          message: "Доступ заборонено",
+        });
+      }
+
+      req.admin = admin;
+
+      next();
+    }
+  );
 }
 
-// Тест захищеного маршруту
-app.get("/admin/protected", verifyAdmin, (req, res) => {
-  res.json({ message: "Адмін доступ дозволено!" });
+// ======================================
+// 🔒 ТЕСТ ЗАХИЩЕНОГО ADMIN ROUTE
+// ======================================
+
+app.get(
+  "/admin/protected",
+  verifyAdmin,
+  (req, res) => {
+    res.json({
+      message: "Адмін доступ дозволено!",
+    });
+  }
+);
+
+// ======================================
+// ❤️ HEALTH CHECK
+// ======================================
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "Backend is running!",
+    database:
+      mongoose.connection.readyState === 1
+        ? "connected"
+        : "disconnected",
+  });
 });
 
 // ======================================
-// ⚙ ГОЛОВНИЙ ТЕСТОВИЙ МАРШРУТ
+// ❌ ОБРОБКА ПОМИЛОК
 // ======================================
-app.get("/", (req, res) => {
-  res.send("Backend is running!");
+
+app.use((err, req, res, next) => {
+  console.error(err);
+
+  res.status(500).json({
+    message: "Внутрішня помилка сервера",
+  });
 });
 
 // ======================================
 // ▶️ ЗАПУСК СЕРВЕРА
 // ======================================
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+app.listen(PORT, () => {
+  console.log(
+    `Server running on port ${PORT}`
+  );
+});
