@@ -6,6 +6,13 @@ import toast from "react-hot-toast";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // ==========================================
+  // URL твого production backend на Render
+  // ==========================================
+
+  const API_URL = "https://first-backend-nkz7.onrender.com";
 
   // ==========================================
   // Завантаження моїх замовлень
@@ -16,8 +23,14 @@ export default function Orders() {
       try {
         const token = localStorage.getItem("token");
 
+        if (!token) {
+          toast.error("Потрібно увійти в акаунт");
+          setLoading(false);
+          return;
+        }
+
         const res = await axios.get(
-          "http://localhost:5000/api/orders/my",
+          `${API_URL}/api/orders/my`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -36,9 +49,25 @@ export default function Orders() {
           err
         );
 
+        if (err.response) {
+          console.error(
+            "Статус:",
+            err.response.status
+          );
+
+          console.error(
+            "Відповідь сервера:",
+            err.response.data
+          );
+        }
+
         toast.error(
           "Не вдалося завантажити замовлення"
         );
+
+        setOrders([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -54,7 +83,7 @@ export default function Orders() {
       const doc = new jsPDF();
 
       // ========================================
-      // Завантажуємо Unicode-шрифт
+      // Завантаження Unicode-шрифту
       // ========================================
 
       const fontResponse = await fetch(
@@ -75,18 +104,13 @@ export default function Orders() {
 
       let binary = "";
 
-      for (
-        let i = 0;
-        i < fontBytes.length;
-        i++
-      ) {
+      for (let i = 0; i < fontBytes.length; i++) {
         binary += String.fromCharCode(
           fontBytes[i]
         );
       }
 
-      const fontBase64 =
-        btoa(binary);
+      const fontBase64 = btoa(binary);
 
       // Додаємо шрифт у PDF
       doc.addFileToVFS(
@@ -278,7 +302,7 @@ export default function Orders() {
       });
 
       // ========================================
-      // Загальна сума
+      // Розрахунок загальної суми
       // ========================================
 
       const calculatedTotal = (
@@ -291,13 +315,14 @@ export default function Orders() {
         0
       );
 
-      // Використовуємо totalPrice з MongoDB,
-      // якщо він існує
       const total =
         order.totalPrice ??
         calculatedTotal;
 
-      // Позиція після таблиці
+      // ========================================
+      // Загальна сума
+      // ========================================
+
       const finalY =
         doc.lastAutoTable?.finalY || 100;
 
@@ -352,6 +377,28 @@ export default function Orders() {
   };
 
   // ==========================================
+  // Loading
+  // ==========================================
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-8 text-center">
+            <div className="text-4xl mb-4">
+              ⏳
+            </div>
+
+            <p className="text-gray-700 dark:text-gray-300">
+              Завантаження замовлень...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ==========================================
   // Відображення сторінки
   // ==========================================
 
@@ -361,12 +408,15 @@ export default function Orders() {
       <div className="max-w-6xl mx-auto">
 
         {/* Заголовок */}
+
         <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
           📦 Мої замовлення
         </h1>
 
         {/* Якщо замовлень немає */}
+
         {orders.length === 0 ? (
+
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-8 text-center">
 
             <div className="text-5xl mb-4">
@@ -383,10 +433,13 @@ export default function Orders() {
             </p>
 
           </div>
+
         ) : (
 
           /* Список замовлень */
+
           orders.map((order) => (
+
             <div
               key={order._id}
               className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 mb-4 shadow-sm"
@@ -395,32 +448,33 @@ export default function Orders() {
               <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
 
                 {/* Інформація */}
+
                 <div>
 
                   <p className="text-lg font-semibold text-gray-800 dark:text-white">
-                    Замовлення #
-                    {order._id}
+                    Замовлення #{order._id}
                   </p>
 
                   <p className="text-gray-700 dark:text-gray-300 mt-2">
                     <strong>
                       Статус:
                     </strong>{" "}
-                    {order.status}
+                    {order.status || "-"}
                   </p>
 
                   <p className="text-gray-700 dark:text-gray-300">
                     <strong>
                       Дата:
                     </strong>{" "}
-                    {new Date(
-                      order.createdAt
-                    ).toLocaleString(
-                      "uk-UA"
-                    )}
+                    {order.createdAt
+                      ? new Date(
+                          order.createdAt
+                        ).toLocaleString(
+                          "uk-UA"
+                        )
+                      : "-"}
                   </p>
 
-                  {/* Загальна сума */}
                   <p className="text-gray-700 dark:text-gray-300">
                     <strong>
                       Сума:
@@ -431,7 +485,6 @@ export default function Orders() {
                     ₴
                   </p>
 
-                  {/* Доставка */}
                   <p className="text-gray-700 dark:text-gray-300">
                     <strong>
                       Доставка:
@@ -442,7 +495,6 @@ export default function Orders() {
                       : "Укрпошта"}
                   </p>
 
-                  {/* Трек-номер */}
                   {order.trackingNumber && (
                     <p className="text-gray-700 dark:text-gray-300">
                       <strong>
@@ -455,11 +507,10 @@ export default function Orders() {
                 </div>
 
                 {/* Кнопка PDF */}
+
                 <button
                   onClick={() =>
-                    generateReceipt(
-                      order
-                    )
+                    generateReceipt(order)
                   }
                   className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg transition font-semibold"
                 >
@@ -469,8 +520,10 @@ export default function Orders() {
               </div>
 
               {/* Товари */}
+
               {order.items &&
                 order.items.length > 0 && (
+
                   <div className="mt-5 border-t pt-4">
 
                     <h3 className="font-semibold mb-3 text-gray-800 dark:text-white">
@@ -481,6 +534,7 @@ export default function Orders() {
 
                       {order.items.map(
                         (item, index) => (
+
                           <div
                             key={
                               item.productId ||
@@ -496,33 +550,38 @@ export default function Orders() {
                             </span>
 
                             <span className="font-semibold whitespace-nowrap">
+
                               {(
                                 Number(
-                                  item.price ||
-                                    0
+                                  item.price || 0
                                 ) *
                                 Number(
-                                  item.quantity ||
-                                    0
+                                  item.quantity || 0
                                 )
                               ).toFixed(2)}{" "}
                               ₴
+
                             </span>
 
                           </div>
+
                         )
                       )}
 
                     </div>
 
                   </div>
+
                 )}
 
             </div>
+
           ))
+
         )}
 
       </div>
+
     </div>
   );
 }
