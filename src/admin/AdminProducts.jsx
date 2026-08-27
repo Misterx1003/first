@@ -10,13 +10,13 @@ export default function AdminProducts() {
   const [price, setPrice] = useState("");
 
   const fetchProducts = async () => {
-    const res = await axios.get("http://localhost:5000/products");
+    const res = await axios.get("${process.env.REACT_APP_API_URL}/products");
     setProducts(res.data);
   };
 
   const addProduct = async () => {
     try {
-      await axios.post("http://localhost:5000/products", { name, price });
+      await axios.post("${process.env.REACT_APP_API_URL}/products", { name, price });
       toast.success("Додано!");
       fetchProducts();
     } catch {
@@ -25,7 +25,7 @@ export default function AdminProducts() {
   };
 
   const deleteProduct = async (id) => {
-    await axios.delete(`http://localhost:5000/products/${id}`);
+    await axios.delete(`${process.env.REACT_APP_API_URL}/products/${id}`);
     toast.success("Видалено!");
     fetchProducts();
   };

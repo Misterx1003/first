@@ -18,7 +18,7 @@ function Reviews({ productId }) {
       setLoading(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/reviews/${productId}`
+        `${process.env.REACT_APP_API_URL}/${productId}`
       );
 
       if (!res.ok) {

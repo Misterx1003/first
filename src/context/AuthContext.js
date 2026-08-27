@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     axios
-      .get("http://localhost:5000/api/auth/me", {
+      .get("${process.env.REACT_APP_API_URL}/api/auth/me", {
         headers: {
           Authorization: `Bearer ${savedToken}`,
         },
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
   // REGISTER
   const register = async (userData) => {
     const res = await axios.post(
-      "http://localhost:5000/api/auth/register",
+      "${process.env.REACT_APP_API_URL}/api/auth/register",
       userData
     );
 
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
   // LOGIN
   const login = async (email, password) => {
     const res = await axios.post(
-      "http://localhost:5000/api/auth/login",
+      "${process.env.REACT_APP_API_URL}/api/auth/login",
       {
         email,
         password,
