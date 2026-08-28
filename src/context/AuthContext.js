@@ -25,11 +25,14 @@ export const AuthProvider = ({ children }) => {
     }
 
     axios
-      .get("${process.env.REACT_APP_API_URL}/api/auth/me", {
-        headers: {
-          Authorization: `Bearer ${savedToken}`,
-        },
-      })
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${savedToken}`,
+          },
+        }
+      )
       .then((res) => {
         setUser(res.data);
         setToken(savedToken);
@@ -47,7 +50,7 @@ export const AuthProvider = ({ children }) => {
   // REGISTER
   const register = async (userData) => {
     const res = await axios.post(
-      "${process.env.REACT_APP_API_URL}/api/auth/register",
+      `${process.env.REACT_APP_API_URL}/api/auth/register`,
       userData
     );
 
@@ -60,7 +63,7 @@ export const AuthProvider = ({ children }) => {
   // LOGIN
   const login = async (email, password) => {
     const res = await axios.post(
-      "${process.env.REACT_APP_API_URL}/api/auth/login",
+      `${process.env.REACT_APP_API_URL}/api/auth/login`,
       {
         email,
         password,

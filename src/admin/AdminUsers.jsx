@@ -7,20 +7,28 @@ export default function AdminUsers() {
   const [users, setUsers] = useState([]);
 
   const fetchUsers = async () => {
-    const res = await axios.get("${process.env.REACT_APP_API_URL}/admin/users", {
+    const res = await axios.get(
+      '${process.env.REACT_APP_API_URL}/admin/users', 
+      {
       headers: {
-        Authorization: "Bearer " + localStorage.getItem("adminToken"),
+        Authorization: 
+        "Bearer " + localStorage.getItem("adminToken"),
       },
-    });
+    }
+  );
     setUsers(res.data);
   };
 
   const deleteUser = async (id) => {
-    await axios.delete("${process.env.REACT_APP_API_URL}/admin/users/${id}", {
+    await axios.delete(
+      '${process.env.REACT_APP_API_URL}/admin/users/${id}', 
+      {
       headers: {
-        Authorization: "Bearer " + localStorage.getItem("adminToken"),
+        Authorization: 
+        "Bearer " + localStorage.getItem("adminToken"),
       },
-    });
+    }
+  );
     toast.success("Користувача видалено");
     fetchUsers();
   };
