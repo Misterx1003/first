@@ -11,7 +11,7 @@ export default function AdminProducts() {
 
   const fetchProducts = async () => {
     const res = await axios.get(
-      '${process.env.REACT_APP_API_URL}/products'
+      `${process.env.REACT_APP_API_URL}/products`
     );
     setProducts(res.data);
   };
@@ -19,7 +19,7 @@ export default function AdminProducts() {
   const addProduct = async () => {
     try {
       await axios.post(
-        '${process.env.REACT_APP_API_URL}/products', 
+        `${process.env.REACT_APP_API_URL}/products`, 
         { name, price }
       );
       toast.success("Додано!");

@@ -9,7 +9,7 @@ export default function AdminLogin() {
   const login = async () => {
     try {
       const res = await axios.post(
-        '${process.env.REACT_APP_API_URL}/admin/login', {
+        `${process.env.REACT_APP_API_URL}/admin/login`, {
         username,
         password,
       }

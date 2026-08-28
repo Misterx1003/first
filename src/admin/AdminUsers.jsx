@@ -8,7 +8,7 @@ export default function AdminUsers() {
 
   const fetchUsers = async () => {
     const res = await axios.get(
-      '${process.env.REACT_APP_API_URL}/admin/users', 
+      `${process.env.REACT_APP_API_URL}/admin/users`, 
       {
       headers: {
         Authorization: 
@@ -21,7 +21,7 @@ export default function AdminUsers() {
 
   const deleteUser = async (id) => {
     await axios.delete(
-      '${process.env.REACT_APP_API_URL}/admin/users/${id}', 
+      `${process.env.REACT_APP_API_URL}/admin/users/${id}`, 
       {
       headers: {
         Authorization: 

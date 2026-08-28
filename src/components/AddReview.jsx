@@ -37,7 +37,7 @@ export default function AddReview({ productId, onAdd }) {
       setLoading(true);
 
       await axios.post(
-        '${process.env.REACT_APP_API_URL}/api/reviews',
+       `${process.env.REACT_APP_API_URL}/api/reviews`,
         { productId, rating, comment },
         {
           headers: {

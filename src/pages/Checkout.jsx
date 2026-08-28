@@ -75,7 +75,7 @@ export default function Checkout() {
       setLoading(true);
 
       await axios.post(
-        '${process.env.REACT_APP_API_URL}/api/orders',
+        `${process.env.REACT_APP_API_URL}/api/orders`,
         {
           name: formData.name.trim(),
           phone: formData.phone.trim(),
