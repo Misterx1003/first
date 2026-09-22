@@ -18,7 +18,7 @@ function Reviews({ productId }) {
       setLoading(true);
 
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/${productId}`
+        `${process.env.REACT_APP_API_URL}/api/reviews/${productId}`
       );
 
       if (!res.ok) {
@@ -27,20 +27,18 @@ function Reviews({ productId }) {
 
       const data = await res.json();
 
-      // Захист від неправильного формату відповіді
       if (Array.isArray(data)) {
         setReviews(data);
       } else {
         setReviews([]);
       }
     } catch (error) {
-      console.error("Помилка завантаження відгуків:", error);
+      console.error(
+        "Помилка завантаження відгуків:",
+        error
+      );
 
-      // Не ламаємо всю сторінку через відгуки
       setReviews([]);
-
-      // Не показуємо toast при кожному автоматичному завантаженні,
-      // щоб користувача не дратувати
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -39,6 +40,7 @@ import Order from "./pages/Order";
 import License from "./pages/License";
 import History from "./pages/History";
 import Favorites from "./pages/Favorites";
+import ComparePage from "./pages/ComparePage";
 
 // =========================
 // Адмін
@@ -57,226 +59,251 @@ import AdminOrders from "./admin/AdminOrders";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { CompareProvider } from "./context/CompareContext";
+import { FavoritesProvider } from "./context/FavoritesContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
 function App() {
   return (
     <AuthProvider>
-      <CartProvider>
-        <CompareProvider>
-          <Router>
+      <ThemeProvider>
+        <FavoritesProvider>
+          <CartProvider>
+            <CompareProvider>
+              <Router>
 
-            {/* Навігація */}
-            <Navbar />
+                {/* =========================
+                    NAVBAR
+                ========================= */}
 
-            {/* Toast-повідомлення */}
-            <Toaster position="top-right" />
+                <Navbar />
 
-            <Routes>
+                {/* =========================
+                    TOAST
+                ========================= */}
 
-              {/* =========================
-                  ГОЛОВНА
-              ========================= */}
+                <Toaster position="top-right" />
 
-              <Route
-                path="/"
-                element={<Home />}
-              />
+                {/* =========================
+                    ROUTES
+                ========================= */}
 
-              {/* =========================
-                  ПРО НАС
-              ========================= */}
+                <Routes>
 
-              <Route
-                path="/about"
-                element={<About />}
-              />
+                  {/* =========================
+                      ГОЛОВНА
+                  ========================= */}
 
-              {/* =========================
-                  КОНТАКТИ
-              ========================= */}
+                  <Route
+                    path="/"
+                    element={<Home />}
+                  />
 
-              <Route
-                path="/contact"
-                element={<Contact />}
-              />
+                  {/* =========================
+                      ПРО НАС
+                  ========================= */}
 
-              {/* =========================
-                  МАГАЗИН
-              ========================= */}
+                  <Route
+                    path="/about"
+                    element={<About />}
+                  />
 
-              <Route
-                path="/магазин"
-                element={<Store />}
-              />
+                  {/* =========================
+                      КОНТАКТИ
+                  ========================= */}
 
-              {/* =========================
-                  КАТАЛОГ
-              ========================= */}
+                  <Route
+                    path="/contact"
+                    element={<Contact />}
+                  />
 
-              <Route
-                path="/catalog"
-                element={<Catalog />}
-              />
+                  {/* =========================
+                      МАГАЗИН
+                  ========================= */}
 
-              <Route
-                path="/каталог"
-                element={<Catalog />}
-              />
+                  <Route
+                    path="/магазин"
+                    element={<Store />}
+                  />
 
-              {/* =========================
-                  ОКРЕМИЙ ТОВАР
-              ========================= */}
+                  {/* =========================
+                      КАТАЛОГ
+                  ========================= */}
 
-              <Route
-                path="/product/:id"
-                element={<ProductPage />}
-              />
+                  <Route
+                    path="/catalog"
+                    element={<Catalog />}
+                  />
 
-              {/* =========================
-                  КОШИК
-              ========================= */}
+                  <Route
+                    path="/каталог"
+                    element={<Catalog />}
+                  />
 
-              <Route
-                path="/cart"
-                element={<Cart />}
-              />
+                  {/* =========================
+                      ТОВАР
+                  ========================= */}
 
-              {/* =========================
-                  ОФОРМЛЕННЯ ЗАМОВЛЕННЯ
-              ========================= */}
+                  <Route
+                    path="/product/:id"
+                    element={<ProductPage />}
+                  />
 
-              <Route
-                path="/checkout"
-                element={
-                  <ProtectedRoute>
-                    <Checkout />
-                  </ProtectedRoute>
-                }
-              />
+                  {/* =========================
+                      КОШИК
+                  ========================= */}
 
-              {/* =========================
-                  ЗАМОВИТИ РОБОТУ
-              ========================= */}
+                  <Route
+                    path="/cart"
+                    element={<Cart />}
+                  />
 
-              <Route
-                path="/order"
-                element={<Order />}
-              />
+                  {/* =========================
+                      ОФОРМЛЕННЯ
+                  ========================= */}
 
-              {/* =========================
-                  УЛЮБЛЕНІ
-              ========================= */}
+                  <Route
+                    path="/checkout"
+                    element={
+                      <ProtectedRoute>
+                        <Checkout />
+                      </ProtectedRoute>
+                    }
+                  />
 
-              <Route
-                path="/favorites"
-                element={<Favorites />}
-              />
+                  {/* =========================
+                      ЗАМОВИТИ РОБОТУ
+                  ========================= */}
 
-              {/* =========================
-                  ІСТОРІЯ РОБІТ
-              ========================= */}
+                  <Route
+                    path="/order"
+                    element={<Order />}
+                  />
 
-              <Route
-                path="/history"
-                element={<History />}
-              />
+                  {/* =========================
+                      ❤️ УЛЮБЛЕНІ
+                  ========================= */}
 
-              {/* =========================
-                  ЛІЦЕНЗІЇ
-              ========================= */}
+                  <Route
+                    path="/favorites"
+                    element={<Favorites />}
+                  />
 
-              <Route
-                path="/license"
-                element={<License />}
-              />
+                  {/* =========================
+                      ⚖️ ПОРІВНЯННЯ
+                  ========================= */}
 
-              <Route
-                path="/licenses"
-                element={<License />}
-              />
+                  <Route
+                    path="/compare"
+                    element={<ComparePage />}
+                  />
 
-              {/* =========================
-                  ВХІД
-              ========================= */}
+                  {/* =========================
+                      ІСТОРІЯ
+                  ========================= */}
 
-              <Route
-                path="/login"
-                element={<Login />}
-              />
+                  <Route
+                    path="/history"
+                    element={<History />}
+                  />
 
-              {/* =========================
-                  РЕЄСТРАЦІЯ
-              ========================= */}
+                  {/* =========================
+                      ЛІЦЕНЗІЇ
+                  ========================= */}
 
-              <Route
-                path="/register"
-                element={<Register />}
-              />
+                  <Route
+                    path="/license"
+                    element={<License />}
+                  />
 
-              {/* =========================
-                  МОЇ ЗАМОВЛЕННЯ
-              ========================= */}
+                  <Route
+                    path="/licenses"
+                    element={<License />}
+                  />
 
-              <Route
-                path="/orders"
-                element={
-                  <ProtectedRoute>
-                    <Orders />
-                  </ProtectedRoute>
-                }
-              />
+                  {/* =========================
+                      ВХІД
+                  ========================= */}
 
-              {/* =========================
-                  АДМІН — ВХІД
-              ========================= */}
+                  <Route
+                    path="/login"
+                    element={<Login />}
+                  />
 
-              <Route
-                path="/admin/login"
-                element={<AdminLogin />}
-              />
+                  {/* =========================
+                      РЕЄСТРАЦІЯ
+                  ========================= */}
 
-              {/* =========================
-                  АДМІН — ПАНЕЛЬ
-              ========================= */}
+                  <Route
+                    path="/register"
+                    element={<Register />}
+                  />
 
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute adminOnly>
-                    <AdminPanel />
-                  </ProtectedRoute>
-                }
-              >
-                <Route
-                  path="users"
-                  element={<AdminUsers />}
-                />
+                  {/* =========================
+                      МОЇ ЗАМОВЛЕННЯ
+                  ========================= */}
 
-                <Route
-                  path="products"
-                  element={<AdminProducts />}
-                />
+                  <Route
+                    path="/orders"
+                    element={
+                      <ProtectedRoute>
+                        <Orders />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                <Route
-                  path="orders"
-                  element={<AdminOrders />}
-                />
-              </Route>
+                  {/* =========================
+                      АДМІН — ВХІД
+                  ========================= */}
 
-              {/* =========================
-                  404
-              ========================= */}
+                  <Route
+                    path="/admin/login"
+                    element={<AdminLogin />}
+                  />
 
-              <Route
-                path="*"
-                element={<NotFound />}
-              />
+                  {/* =========================
+                      АДМІН — ПАНЕЛЬ
+                  ========================= */}
 
-            </Routes>
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute adminOnly>
+                        <AdminPanel />
+                      </ProtectedRoute>
+                    }
+                  >
+                    <Route
+                      path="users"
+                      element={<AdminUsers />}
+                    />
 
-          </Router>
-        </CompareProvider>
-      </CartProvider>
+                    <Route
+                      path="products"
+                      element={<AdminProducts />}
+                    />
+
+                    <Route
+                      path="orders"
+                      element={<AdminOrders />}
+                    />
+                  </Route>
+
+                  {/* =========================
+                      404
+                  ========================= */}
+
+                  <Route
+                    path="*"
+                    element={<NotFound />}
+                  />
+
+                </Routes>
+
+              </Router>
+            </CompareProvider>
+          </CartProvider>
+        </FavoritesProvider>
+      </ThemeProvider>
     </AuthProvider>
   );
 }
