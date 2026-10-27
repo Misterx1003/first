@@ -1,3 +1,4 @@
+
 import React, { useState, useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
@@ -16,14 +17,13 @@ export default function Checkout() {
     address: "",
     phone: "",
     delivery: "nova_poshta",
+    paymentMethod: "cod",
   });
 
   const [loading, setLoading] = useState(false);
 
-  // Захист від некоректного cart
   const safeCart = Array.isArray(cart) ? cart : [];
 
-  // Загальна сума
   const total = safeCart.reduce(
     (sum, item) =>
       sum +
@@ -31,7 +31,12 @@ export default function Checkout() {
     0
   );
 
-  // Зміна полів форми
+  const formatPrice = (price) =>
+    Number(price).toLocaleString("uk-UA", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -41,31 +46,28 @@ export default function Checkout() {
     }));
   };
 
-  // Оформлення замовлення
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Перевірка авторизації
     if (!user || !token) {
       toast.error("Увійдіть, щоб оформити замовлення");
       navigate("/login");
       return;
     }
 
-    // Перевірка кошика
     if (safeCart.length === 0) {
       toast.error("Кошик порожній");
       navigate("/cart");
       return;
     }
 
-    // Перевірка форми
     if (
       !formData.name.trim() ||
       !formData.phone.trim() ||
       !formData.city.trim() ||
       !formData.address.trim() ||
-      !formData.delivery
+      !formData.delivery ||
+      !formData.paymentMethod
     ) {
       toast.error("Будь ласка, заповніть усі поля");
       return;
@@ -82,6 +84,7 @@ export default function Checkout() {
           city: formData.city.trim(),
           address: formData.address.trim(),
           delivery: formData.delivery,
+          paymentMethod: formData.paymentMethod,
           items: safeCart,
         },
         {
@@ -93,16 +96,10 @@ export default function Checkout() {
 
       toast.success("✅ Замовлення оформлено!");
 
-      // Очищаємо кошик
       clearCart();
-
-      // Переходимо до замовлень
       navigate("/orders");
     } catch (err) {
-      console.error(
-        "Помилка оформлення замовлення:",
-        err
-      );
+      console.error("Помилка оформлення замовлення:", err);
 
       toast.error(
         err.response?.data?.message ||
@@ -116,17 +113,13 @@ export default function Checkout() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
-
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-
-          {/* Заголовок */}
           <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
             Оформлення замовлення
           </h1>
 
-          {/* Товари */}
+          {/* Товари та підсумок */}
           <div className="mb-6">
-
             <h2 className="text-xl font-semibold mb-3 text-gray-800 dark:text-white">
               Ваше замовлення
             </h2>
@@ -134,42 +127,36 @@ export default function Checkout() {
             {safeCart.map((item) => (
               <div
                 key={item.id}
-                className="flex justify-between border-b py-3 text-gray-700 dark:text-gray-200"
+                className="flex justify-between gap-4 border-b py-3 text-gray-700 dark:text-gray-200"
               >
                 <span>
                   {item.name} × {item.quantity}
                 </span>
 
-                <span className="font-semibold">
-                  {Number(item.price || 0) *
-                    Number(item.quantity || 0)}{" "}
+                <span className="font-semibold whitespace-nowrap">
+                  {formatPrice(
+                    Number(item.price || 0) *
+                    Number(item.quantity || 0)
+                  )}{" "}
                   ₴
                 </span>
               </div>
             ))}
 
-            {/* Загальна сума */}
             <div className="flex justify-between text-xl font-bold mt-4 text-gray-800 dark:text-white">
               <span>Разом:</span>
-
-              <span>{total} ₴</span>
+              <span>{formatPrice(total)} ₴</span>
             </div>
-
           </div>
 
-          {/* Форма */}
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-4"
-          >
-
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Ім'я */}
             <div>
               <label
                 htmlFor="name"
                 className="block mb-1 font-medium text-gray-800 dark:text-white"
               >
-                Ім'я
+                Ім'я та прізвище
               </label>
 
               <input
@@ -178,7 +165,7 @@ export default function Checkout() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Ваше ім'я"
+                placeholder="Ваше ім'я та прізвище"
                 autoComplete="name"
                 required
                 className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -229,13 +216,13 @@ export default function Checkout() {
               />
             </div>
 
-            {/* Адреса */}
+            {/* Адреса або відділення */}
             <div>
               <label
                 htmlFor="address"
                 className="block mb-1 font-medium text-gray-800 dark:text-white"
               >
-                Адреса
+                Адреса або номер відділення
               </label>
 
               <input
@@ -244,14 +231,14 @@ export default function Checkout() {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                placeholder="Адреса / відділення"
+                placeholder="Адреса / номер відділення"
                 autoComplete="street-address"
                 required
                 className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               />
             </div>
 
-            {/* Доставка */}
+            {/* Спосіб доставки */}
             <div>
               <label
                 htmlFor="delivery"
@@ -268,17 +255,78 @@ export default function Checkout() {
                 required
                 className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
-                <option value="nova_poshta">
-                  Нова Пошта
-                </option>
-
-                <option value="ukrposhta">
-                  Укрпошта
-                </option>
+                <option value="nova_poshta">Нова Пошта</option>
+                <option value="ukrposhta">Укрпошта</option>
               </select>
             </div>
 
-            {/* Кнопка */}
+            {/* Спосіб оплати */}
+            <fieldset className="border border-gray-300 dark:border-gray-600 rounded-xl p-4">
+              <legend className="px-2 font-semibold text-gray-800 dark:text-white">
+                Спосіб оплати
+              </legend>
+
+              <div className="space-y-3">
+                <label className="flex items-start gap-3 cursor-pointer text-gray-800 dark:text-white">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={formData.paymentMethod === "cod"}
+                    onChange={handleChange}
+                    className="mt-1"
+                  />
+
+                  <span>
+                    <span className="block font-medium">
+                      Післяплата
+                    </span>
+                    <span className="block text-sm text-gray-500 dark:text-gray-400">
+                      Оплата під час отримання замовлення.
+                      Можлива додаткова комісія перевізника.
+                    </span>
+                  </span>
+                </label>
+
+                <label className="flex items-start gap-3 cursor-pointer text-gray-800 dark:text-white">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="bank_transfer"
+                    checked={formData.paymentMethod === "bank_transfer"}
+                    onChange={handleChange}
+                    className="mt-1"
+                  />
+
+                  <span>
+                    <span className="block font-medium">
+                      Банківський переказ
+                    </span>
+                    <span className="block text-sm text-gray-500 dark:text-gray-400">
+                      Реквізити для оплати потрібно буде надати окремо.
+                    </span>
+                  </span>
+                </label>
+
+                <div className="flex items-start gap-3 text-gray-400 dark:text-gray-500">
+                  <input
+                    type="radio"
+                    disabled
+                    className="mt-1"
+                  />
+
+                  <span>
+                    <span className="block font-medium">
+                      Оплата карткою онлайн
+                    </span>
+                    <span className="block text-sm">
+                      Поки недоступна — платіжний сервіс ще не підключено.
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </fieldset>
+
             <button
               type="submit"
               disabled={loading}
@@ -288,7 +336,6 @@ export default function Checkout() {
                 ? "Оформлення..."
                 : "Оформити замовлення"}
             </button>
-
           </form>
         </div>
       </div>

@@ -1,8 +1,8 @@
+
 const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema(
   {
-    // 🔐 якщо користувач залогінений
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -12,21 +12,25 @@ const OrderSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
 
     phone: {
       type: String,
       required: true,
+      trim: true,
     },
 
     city: {
       type: String,
       required: true,
+      trim: true,
     },
 
     address: {
       type: String,
       required: true,
+      trim: true,
     },
 
     items: [
@@ -35,21 +39,39 @@ const OrderSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
         },
-        name: String,
-        price: Number,
-        quantity: Number,
+        name: {
+          type: String,
+          required: true,
+        },
+        price: {
+          type: Number,
+          required: true,
+          min: 0,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          min: 1,
+        },
       },
     ],
 
-    // 🔥 НОВЕ — загальна сума
     totalPrice: {
       type: Number,
       required: true,
+      min: 0,
     },
 
     delivery: {
       type: String,
       enum: ["nova_poshta", "ukrposhta"],
+      required: true,
+    },
+
+    paymentMethod: {
+      type: String,
+      enum: ["cod", "bank_transfer"],
+      default: "cod",
       required: true,
     },
 
@@ -61,14 +83,12 @@ const OrderSchema = new mongoose.Schema(
 
     trackingNumber: {
       type: String,
-      default: null, // ✔ краще ніж ""
+      default: null,
     },
   },
   { timestamps: true }
 );
 
-
-// 🔥 ПРОФІ — індекс для швидких запитів
 OrderSchema.index({ user: 1, createdAt: -1 });
 
 module.exports = mongoose.model("Order", OrderSchema);

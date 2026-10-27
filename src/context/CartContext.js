@@ -1,3 +1,4 @@
+
 import React, {
   createContext,
   useEffect,
@@ -6,88 +7,109 @@ import React, {
 
 export const CartContext = createContext();
 
-export const CartProvider = ({ children }) => {
+export function CartProvider({ children }) {
   const [cart, setCart] = useState(() => {
     try {
-      const saved = localStorage.getItem("cart");
+      const savedCart = localStorage.getItem("cart");
+      const parsedCart = savedCart
+        ? JSON.parse(savedCart)
+        : [];
 
-      if (!saved) {
-        return [];
-      }
-
-      const parsed = JSON.parse(saved);
-
-      // Перевіряємо, що в localStorage справді масив
-      if (!Array.isArray(parsed)) {
-        console.warn("Дані кошика пошкоджені. Кошик очищено.");
-        return [];
-      }
-
-      return parsed;
+      return Array.isArray(parsedCart) ? parsedCart : [];
     } catch (error) {
-      console.error(
-        "Помилка завантаження кошика:",
-        error
-      );
-
+      console.error("Помилка завантаження кошика:", error);
       return [];
     }
   });
 
-  // Зберігаємо кошик у localStorage
+  // Зберігаємо кошик після кожної зміни
   useEffect(() => {
-    try {
-      localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
-      );
-    } catch (error) {
-      console.error(
-        "Помилка збереження кошика:",
-        error
-      );
-    }
+    localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  // Додати товар
+  // Додавання товару
   const addToCart = (product) => {
-    setCart((prev) => {
-      const existing = prev.find(
-        (item) => item.id === product.id
+    setCart((previousCart) => {
+      const existingItem = previousCart.find(
+        (item) => String(item.id) === String(product.id)
       );
 
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id
+      if (existingItem) {
+        return previousCart.map((item) =>
+          String(item.id) === String(product.id)
             ? {
                 ...item,
-                quantity:
-                  (item.quantity || 0) + 1,
+                quantity: Number(item.quantity || 1) + 1,
               }
             : item
         );
       }
 
       return [
-        ...prev,
-        {
-          ...product,
-          quantity: 1,
-        },
+        ...previousCart,
+        { ...product, quantity: 1 },
       ];
     });
   };
 
-  // Видалити товар
-  const removeFromCart = (id) => {
-    setCart((prev) =>
-      prev.filter(
-        (item) => item.id !== id
+  // Встановлення кількості товару
+  const updateQuantity = (id, quantity) => {
+    const newQuantity = Math.floor(Number(quantity));
+
+    if (!Number.isFinite(newQuantity) || newQuantity < 1) {
+      return;
+    }
+
+    setCart((previousCart) =>
+      previousCart.map((item) =>
+        String(item.id) === String(id)
+          ? { ...item, quantity: newQuantity }
+          : item
       )
     );
   };
 
-  // Очистити кошик
+  // Збільшення кількості
+  const increaseQuantity = (id) => {
+    setCart((previousCart) =>
+      previousCart.map((item) =>
+        String(item.id) === String(id)
+          ? {
+              ...item,
+              quantity: Number(item.quantity || 1) + 1,
+            }
+          : item
+      )
+    );
+  };
+
+  // Зменшення кількості
+  const decreaseQuantity = (id) => {
+    setCart((previousCart) =>
+      previousCart.map((item) =>
+        String(item.id) === String(id)
+          ? {
+              ...item,
+              quantity: Math.max(
+                1,
+                Number(item.quantity || 1) - 1
+              ),
+            }
+          : item
+      )
+    );
+  };
+
+  // Видалення товару
+  const removeFromCart = (id) => {
+    setCart((previousCart) =>
+      previousCart.filter(
+        (item) => String(item.id) !== String(id)
+      )
+    );
+  };
+
+  // Очищення кошика
   const clearCart = () => {
     setCart([]);
   };
@@ -97,6 +119,9 @@ export const CartProvider = ({ children }) => {
       value={{
         cart,
         addToCart,
+        updateQuantity,
+        increaseQuantity,
+        decreaseQuantity,
         removeFromCart,
         clearCart,
       }}
@@ -104,4 +129,4 @@ export const CartProvider = ({ children }) => {
       {children}
     </CartContext.Provider>
   );
-};
+}
