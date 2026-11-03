@@ -33,21 +33,28 @@ const OrderSchema = new mongoose.Schema(
       trim: true,
     },
 
+    // ==========================================
+    // ТОВАРИ ЗАМОВЛЕННЯ
+    // ==========================================
+
     items: [
       {
         productId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
         },
+
         name: {
           type: String,
           required: true,
         },
+
         price: {
           type: Number,
           required: true,
           min: 0,
         },
+
         quantity: {
           type: Number,
           required: true,
@@ -56,17 +63,29 @@ const OrderSchema = new mongoose.Schema(
       },
     ],
 
+    // ==========================================
+    // ЗАГАЛЬНА СУМА
+    // ==========================================
+
     totalPrice: {
       type: Number,
       required: true,
       min: 0,
     },
 
+    // ==========================================
+    // СПОСІБ ДОСТАВКИ
+    // ==========================================
+
     delivery: {
       type: String,
       enum: ["nova_poshta", "ukrposhta"],
       required: true,
     },
+
+    // ==========================================
+    // СПОСІБ ОПЛАТИ
+    // ==========================================
 
     paymentMethod: {
       type: String,
@@ -75,20 +94,53 @@ const OrderSchema = new mongoose.Schema(
       required: true,
     },
 
+    // ==========================================
+    // СТАТУС ОПЛАТИ
+    // ==========================================
+
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "failed", "refunded"],
+      default: "pending",
+      required: true,
+    },
+
+    // ==========================================
+    // СТАТУС ЗАМОВЛЕННЯ
+    // ==========================================
+
     status: {
       type: String,
-      enum: ["очікує", "в обробці", "доставляється", "доставлено"],
+      enum: [
+        "очікує",
+        "в обробці",
+        "доставляється",
+        "доставлено",
+      ],
       default: "очікує",
     },
+
+    // ==========================================
+    // ТРЕК-НОМЕР
+    // ==========================================
 
     trackingNumber: {
       type: String,
       default: null,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-OrderSchema.index({ user: 1, createdAt: -1 });
+// ==========================================
+// ІНДЕКС ДЛЯ ПОШУКУ ЗАМОВЛЕНЬ КОРИСТУВАЧА
+// ==========================================
+
+OrderSchema.index({
+  user: 1,
+  createdAt: -1,
+});
 
 module.exports = mongoose.model("Order", OrderSchema);

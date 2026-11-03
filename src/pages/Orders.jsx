@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -9,10 +10,50 @@ export default function Orders() {
   const [loading, setLoading] = useState(true);
 
   // ==========================================
-  // URL твого production backend на Render
+  // URL production backend на Render
   // ==========================================
 
   const API_URL = "https://first-backend-nkz7.onrender.com";
+
+  // ==========================================
+  // Назва способу оплати
+  // ==========================================
+
+  const getPaymentMethodName = (method) => {
+    switch (method) {
+      case "cod":
+        return "Післяплата";
+
+      case "bank_transfer":
+        return "Банківський переказ";
+
+      default:
+        return "Не вказано";
+    }
+  };
+
+  // ==========================================
+  // Назва статусу оплати
+  // ==========================================
+
+  const getPaymentStatusName = (status) => {
+    switch (status) {
+      case "pending":
+        return "Очікує оплати";
+
+      case "paid":
+        return "Оплачено";
+
+      case "failed":
+        return "Помилка оплати";
+
+      case "refunded":
+        return "Кошти повернено";
+
+      default:
+        return "Очікує оплати";
+    }
+  };
 
   // ==========================================
   // Завантаження моїх замовлень
@@ -39,9 +80,7 @@ export default function Orders() {
         );
 
         setOrders(
-          Array.isArray(res.data)
-            ? res.data
-            : []
+          Array.isArray(res.data) ? res.data : []
         );
       } catch (err) {
         console.error(
@@ -50,21 +89,11 @@ export default function Orders() {
         );
 
         if (err.response) {
-          console.error(
-            "Статус:",
-            err.response.status
-          );
-
-          console.error(
-            "Відповідь сервера:",
-            err.response.data
-          );
+          console.error("Статус:", err.response.status);
+          console.error("Відповідь сервера:", err.response.data);
         }
 
-        toast.error(
-          "Не вдалося завантажити замовлення"
-        );
-
+        toast.error("Не вдалося завантажити замовлення");
         setOrders([]);
       } finally {
         setLoading(false);
@@ -82,10 +111,7 @@ export default function Orders() {
     try {
       const doc = new jsPDF();
 
-      // ========================================
       // Завантаження Unicode-шрифту
-      // ========================================
-
       const fontResponse = await fetch(
         "/fonts/NotoSans-Regular.ttf"
       );
@@ -96,23 +122,17 @@ export default function Orders() {
         );
       }
 
-      const fontBuffer =
-        await fontResponse.arrayBuffer();
-
-      const fontBytes =
-        new Uint8Array(fontBuffer);
+      const fontBuffer = await fontResponse.arrayBuffer();
+      const fontBytes = new Uint8Array(fontBuffer);
 
       let binary = "";
 
       for (let i = 0; i < fontBytes.length; i++) {
-        binary += String.fromCharCode(
-          fontBytes[i]
-        );
+        binary += String.fromCharCode(fontBytes[i]);
       }
 
       const fontBase64 = btoa(binary);
 
-      // Додаємо шрифт у PDF
       doc.addFileToVFS(
         "NotoSans-Regular.ttf",
         fontBase64
@@ -124,15 +144,9 @@ export default function Orders() {
         "normal"
       );
 
-      doc.setFont(
-        "NotoSans",
-        "normal"
-      );
+      doc.setFont("NotoSans", "normal");
 
-      // ========================================
       // Заголовок
-      // ========================================
-
       doc.setFontSize(18);
 
       doc.text(
@@ -143,10 +157,7 @@ export default function Orders() {
 
       doc.setFontSize(11);
 
-      // ========================================
       // Інформація про замовлення
-      // ========================================
-
       doc.text(
         `Номер замовлення: #${order._id}`,
         14,
@@ -154,23 +165,18 @@ export default function Orders() {
       );
 
       doc.text(
-        `Дата: ${new Date(
-          order.createdAt
-        ).toLocaleString("uk-UA")}`,
+        `Дата: ${new Date(order.createdAt).toLocaleString("uk-UA")}`,
         14,
         37
       );
 
       doc.text(
-        `Статус: ${order.status || "-"}`,
+        `Статус замовлення: ${order.status || "-"}`,
         14,
         44
       );
 
-      // ========================================
       // Дані покупця
-      // ========================================
-
       doc.text(
         `Ім'я: ${order.name || "-"}`,
         14,
@@ -195,14 +201,13 @@ export default function Orders() {
         72
       );
 
-      // ========================================
       // Доставка
-      // ========================================
-
       const deliveryName =
         order.delivery === "nova_poshta"
           ? "Нова Пошта"
-          : "Укрпошта";
+          : order.delivery === "ukrposhta"
+          ? "Укрпошта"
+          : "Не вказано";
 
       doc.text(
         `Доставка: ${deliveryName}`,
@@ -210,10 +215,7 @@ export default function Orders() {
         79
       );
 
-      // ========================================
       // Трек-номер
-      // ========================================
-
       if (order.trackingNumber) {
         doc.text(
           `Трек-номер: ${order.trackingNumber}`,
@@ -222,35 +224,43 @@ export default function Orders() {
         );
       }
 
-      // ========================================
+      // Спосіб оплати
+      doc.text(
+        `Спосіб оплати: ${getPaymentMethodName(
+          order.paymentMethod
+        )}`,
+        14,
+        93
+      );
+
+      // Статус оплати
+      doc.text(
+        `Статус оплати: ${getPaymentStatusName(
+          order.paymentStatus
+        )}`,
+        14,
+        100
+      );
+
       // Таблиця товарів
-      // ========================================
+      const tableData = (order.items || []).map(
+        (item, index) => {
+          const quantity = Number(item.quantity || 0);
+          const price = Number(item.price || 0);
+          const itemTotal = price * quantity;
 
-      const tableData = (
-        order.items || []
-      ).map((item, index) => {
-        const quantity = Number(
-          item.quantity || 0
-        );
-
-        const price = Number(
-          item.price || 0
-        );
-
-        const itemTotal =
-          price * quantity;
-
-        return [
-          index + 1,
-          item.name || "Товар",
-          quantity,
-          `${price.toFixed(2)} ₴`,
-          `${itemTotal.toFixed(2)} ₴`,
-        ];
-      });
+          return [
+            index + 1,
+            item.name || "Товар",
+            quantity,
+            `${price.toFixed(2)} ₴`,
+            `${itemTotal.toFixed(2)} ₴`,
+          ];
+        }
+      );
 
       autoTable(doc, {
-        startY: 94,
+        startY: 108,
 
         head: [
           [
@@ -283,31 +293,15 @@ export default function Orders() {
         },
 
         columnStyles: {
-          0: {
-            cellWidth: 10,
-          },
-
-          2: {
-            cellWidth: 25,
-          },
-
-          3: {
-            cellWidth: 28,
-          },
-
-          4: {
-            cellWidth: 28,
-          },
+          0: { cellWidth: 10 },
+          2: { cellWidth: 25 },
+          3: { cellWidth: 28 },
+          4: { cellWidth: 28 },
         },
       });
 
-      // ========================================
       // Розрахунок загальної суми
-      // ========================================
-
-      const calculatedTotal = (
-        order.items || []
-      ).reduce(
+      const calculatedTotal = (order.items || []).reduce(
         (sum, item) =>
           sum +
           Number(item.price || 0) *
@@ -315,36 +309,21 @@ export default function Orders() {
         0
       );
 
-      const total =
-        order.totalPrice ??
-        calculatedTotal;
+      const total = order.totalPrice ?? calculatedTotal;
 
-      // ========================================
       // Загальна сума
-      // ========================================
+      const finalY = doc.lastAutoTable?.finalY || 115;
 
-      const finalY =
-        doc.lastAutoTable?.finalY || 100;
-
-      doc.setFont(
-        "NotoSans",
-        "normal"
-      );
-
+      doc.setFont("NotoSans", "normal");
       doc.setFontSize(14);
 
       doc.text(
-        `Разом до сплати: ${Number(
-          total
-        ).toFixed(2)} ₴`,
+        `Разом до сплати: ${Number(total).toFixed(2)} ₴`,
         14,
         finalY + 15
       );
 
-      // ========================================
       // Нижній текст
-      // ========================================
-
       doc.setFontSize(9);
 
       doc.text(
@@ -353,31 +332,19 @@ export default function Orders() {
         finalY + 25
       );
 
-      // ========================================
       // Збереження PDF
-      // ========================================
+      doc.save(`Замовлення_${order._id}.pdf`);
 
-      doc.save(
-        `Замовлення_${order._id}.pdf`
-      );
-
-      toast.success(
-        "Чек успішно створено!"
-      );
+      toast.success("Чек успішно створено!");
     } catch (err) {
-      console.error(
-        "Помилка створення PDF:",
-        err
-      );
+      console.error("Помилка створення PDF:", err);
 
-      toast.error(
-        "Не вдалося створити PDF-чек"
-      );
+      toast.error("Не вдалося створити PDF-чек");
     }
   };
 
   // ==========================================
-  // Loading
+  // Завантаження
   // ==========================================
 
   if (loading) {
@@ -385,9 +352,7 @@ export default function Orders() {
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
         <div className="max-w-6xl mx-auto">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-8 text-center">
-            <div className="text-4xl mb-4">
-              ⏳
-            </div>
+            <div className="text-4xl mb-4">⏳</div>
 
             <p className="text-gray-700 dark:text-gray-300">
               Завантаження замовлень...
@@ -404,184 +369,147 @@ export default function Orders() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 md:p-6">
-
       <div className="max-w-6xl mx-auto">
-
-        {/* Заголовок */}
 
         <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
           📦 Мої замовлення
         </h1>
 
-        {/* Якщо замовлень немає */}
-
         {orders.length === 0 ? (
-
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-8 text-center">
-
-            <div className="text-5xl mb-4">
-              📦
-            </div>
+            <div className="text-5xl mb-4">📦</div>
 
             <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">
               Поки що немає замовлень
             </h2>
 
             <p className="text-gray-500 dark:text-gray-400">
-              Тут з'являться ваші замовлення
-              після оформлення покупки.
+              Тут з'являться ваші замовлення після оформлення покупки.
             </p>
-
           </div>
-
         ) : (
-
-          /* Список замовлень */
-
           orders.map((order) => (
-
             <div
               key={order._id}
               className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 mb-4 shadow-sm"
             >
-
               <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
 
-                {/* Інформація */}
+                {/* Інформація про замовлення */}
 
                 <div>
-
                   <p className="text-lg font-semibold text-gray-800 dark:text-white">
                     Замовлення #{order._id}
                   </p>
 
                   <p className="text-gray-700 dark:text-gray-300 mt-2">
-                    <strong>
-                      Статус:
-                    </strong>{" "}
+                    <strong>Статус замовлення:</strong>{" "}
                     {order.status || "-"}
                   </p>
 
                   <p className="text-gray-700 dark:text-gray-300">
-                    <strong>
-                      Дата:
-                    </strong>{" "}
+                    <strong>Дата:</strong>{" "}
                     {order.createdAt
-                      ? new Date(
-                          order.createdAt
-                        ).toLocaleString(
-                          "uk-UA"
-                        )
+                      ? new Date(order.createdAt).toLocaleString("uk-UA")
                       : "-"}
                   </p>
 
                   <p className="text-gray-700 dark:text-gray-300">
-                    <strong>
-                      Сума:
-                    </strong>{" "}
-                    {Number(
-                      order.totalPrice || 0
-                    ).toFixed(2)}{" "}
-                    ₴
+                    <strong>Сума:</strong>{" "}
+                    {Number(order.totalPrice || 0).toFixed(2)} ₴
                   </p>
 
                   <p className="text-gray-700 dark:text-gray-300">
-                    <strong>
-                      Доставка:
-                    </strong>{" "}
-                    {order.delivery ===
-                    "nova_poshta"
-                      ? "Нова Пошта"
-                      : "Укрпошта"}
+                    <strong>Доставка:</strong>{" "}
+                    {deliveryNameForDisplay(order.delivery)}
                   </p>
 
                   {order.trackingNumber && (
                     <p className="text-gray-700 dark:text-gray-300">
-                      <strong>
-                        Трек-номер:
-                      </strong>{" "}
+                      <strong>Трек-номер:</strong>{" "}
                       {order.trackingNumber}
                     </p>
                   )}
 
+                  {/* Спосіб оплати */}
+
+                  <p className="text-gray-700 dark:text-gray-300 mt-2">
+                    <strong>Спосіб оплати:</strong>{" "}
+                    {getPaymentMethodName(order.paymentMethod)}
+                  </p>
+
+                  {/* Статус оплати */}
+
+                  <p className="text-gray-700 dark:text-gray-300">
+                    <strong>Статус оплати:</strong>{" "}
+                    <span
+                      className={
+                        order.paymentStatus === "paid"
+                          ? "text-green-600 font-semibold"
+                          : order.paymentStatus === "failed"
+                          ? "text-red-600 font-semibold"
+                          : "text-orange-500 font-semibold"
+                      }
+                    >
+                      {getPaymentStatusName(order.paymentStatus)}
+                    </span>
+                  </p>
                 </div>
 
                 {/* Кнопка PDF */}
 
                 <button
-                  onClick={() =>
-                    generateReceipt(order)
-                  }
+                  onClick={() => generateReceipt(order)}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg transition font-semibold"
                 >
                   💾 Завантажити чек
                 </button>
-
               </div>
 
               {/* Товари */}
 
-              {order.items &&
-                order.items.length > 0 && (
+              {order.items && order.items.length > 0 && (
+                <div className="mt-5 border-t pt-4">
+                  <h3 className="font-semibold mb-3 text-gray-800 dark:text-white">
+                    Товари:
+                  </h3>
 
-                  <div className="mt-5 border-t pt-4">
+                  <div className="space-y-2">
+                    {order.items.map((item, index) => (
+                      <div
+                        key={item.productId || item._id || index}
+                        className="flex justify-between gap-4 text-sm text-gray-700 dark:text-gray-300"
+                      >
+                        <span>
+                          {item.name} × {item.quantity}
+                        </span>
 
-                    <h3 className="font-semibold mb-3 text-gray-800 dark:text-white">
-                      Товари:
-                    </h3>
-
-                    <div className="space-y-2">
-
-                      {order.items.map(
-                        (item, index) => (
-
-                          <div
-                            key={
-                              item.productId ||
-                              index
-                            }
-                            className="flex justify-between gap-4 text-sm text-gray-700 dark:text-gray-300"
-                          >
-
-                            <span>
-                              {item.name}
-                              {" × "}
-                              {item.quantity}
-                            </span>
-
-                            <span className="font-semibold whitespace-nowrap">
-
-                              {(
-                                Number(
-                                  item.price || 0
-                                ) *
-                                Number(
-                                  item.quantity || 0
-                                )
-                              ).toFixed(2)}{" "}
-                              ₴
-
-                            </span>
-
-                          </div>
-
-                        )
-                      )}
-
-                    </div>
-
+                        <span className="font-semibold whitespace-nowrap">
+                          {(
+                            Number(item.price || 0) *
+                            Number(item.quantity || 0)
+                          ).toFixed(2)}{" "}
+                          ₴
+                        </span>
+                      </div>
+                    ))}
                   </div>
-
-                )}
-
+                </div>
+              )}
             </div>
-
           ))
-
         )}
-
       </div>
-
     </div>
   );
+}
+
+// ==========================================
+// Назва доставки для відображення
+// ==========================================
+
+function deliveryNameForDisplay(delivery) {
+  if (delivery === "nova_poshta") return "Нова Пошта";
+  if (delivery === "ukrposhta") return "Укрпошта";
+  return "Не вказано";
 }
