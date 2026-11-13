@@ -1,9 +1,11 @@
-
 const express = require("express");
 const router = express.Router();
 
+const mongoose = require("mongoose");
 const Order = require("../models/Order");
+
 const auth = require("../middleware/authMiddleware");
+const verifyAdmin = require("../middleware/adminMiddleware");
 
 // ==========================================
 // Генератор демонстраційного трек-номера
@@ -105,9 +107,11 @@ router.post("/", auth, async (req, res) => {
       });
     }
 
-    // Формуємо товари лише з потрібними полями
+    // Формуємо товари
     const orderItems = items.map((item) => ({
-      ...(item.productId ? { productId: item.productId } : {}),
+      ...(item.productId
+        ? { productId: item.productId }
+        : {}),
       name: item.name.trim(),
       price: Number(item.price),
       quantity: Number(item.quantity),
@@ -133,7 +137,6 @@ router.post("/", auth, async (req, res) => {
     // Зберігаємо в MongoDB
     await newOrder.save();
 
-    // Відповідь frontend
     return res.status(201).json({
       message: "Замовлення створено ✅ Менеджер скоро подзвонить.",
       order: newOrder,
@@ -169,5 +172,89 @@ router.get("/my", auth, async (req, res) => {
     });
   }
 });
+
+// ==========================================
+// ADMIN: ОТРИМАТИ ВСІ ЗАМОВЛЕННЯ
+// ==========================================
+
+router.get("/admin/all", verifyAdmin, async (req, res) => {
+  try {
+    const orders = await Order.find().sort({
+      createdAt: -1,
+    });
+
+    return res.json(orders);
+  } catch (err) {
+    console.error("Помилка отримання всіх замовлень:", err);
+
+    return res.status(500).json({
+      message: "Не вдалося отримати замовлення",
+    });
+  }
+});
+
+// ==========================================
+// ADMIN: ПОЗНАЧИТИ ЗАМОВЛЕННЯ ОПЛАЧЕНИМ
+// ==========================================
+
+router.patch(
+  "/admin/:id/payment-status",
+  verifyAdmin,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      // Перевірка ID
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({
+          message: "Некоректний номер замовлення",
+        });
+      }
+
+      // Пошук замовлення
+      const order = await Order.findById(id);
+
+      if (!order) {
+        return res.status(404).json({
+          message: "Замовлення не знайдено",
+        });
+      }
+
+      // Перевірка поточного статусу
+      if (order.paymentStatus === "paid") {
+        return res.json({
+          message: "Замовлення вже оплачене",
+          order,
+        });
+      }
+
+      if (
+        order.paymentStatus &&
+        order.paymentStatus !== "pending"
+      ) {
+        return res.status(400).json({
+          message: "Неможливо змінити цей статус оплати",
+        });
+      }
+
+      // Змінюємо статус оплати
+      order.paymentStatus = "paid";
+
+      // Зберігаємо зміни
+      await order.save();
+
+      return res.json({
+        message: "Оплату успішно підтверджено",
+        order,
+      });
+    } catch (err) {
+      console.error("Помилка зміни статусу оплати:", err);
+
+      return res.status(500).json({
+        message: "Не вдалося змінити статус оплати",
+      });
+    }
+  }
+);
 
 module.exports = router;
